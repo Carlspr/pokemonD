@@ -141,7 +141,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
         }
     }),
 
-    fallback: false,
+    fallback:'blocking',
   };
 };
 
@@ -152,10 +152,21 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const pockemon = await getPockemonInfo(name);
 
+  if(!pockemon){
+    return{
+      redirect:{
+        destination:"/",
+        permanent:false
+      }
+    }
+  }
+
   return {
     props: {
       pockemon,
     },
+
+    revalidate:86400
   };
 };
 
